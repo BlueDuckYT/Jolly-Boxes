@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": {
+        "min": 1.0,
+        "max": 1.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "weight": 3,
+          "quality": 0,
+          "name": "jolly_boxes:large_present_single_stack",
+          "expand": true
+        }
+      ]
+    }
+  ]
+}
