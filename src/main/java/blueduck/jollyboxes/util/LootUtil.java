@@ -14,6 +14,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static blueduck.jollyboxes.JollyBoxesMod.MODID;
+
 public class LootUtil {
 
     public static ArrayList<ResourceLocation> SMALL_LOOT_POOLS = new ArrayList<ResourceLocation>();

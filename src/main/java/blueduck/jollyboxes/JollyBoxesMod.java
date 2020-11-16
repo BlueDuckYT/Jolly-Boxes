@@ -13,6 +13,7 @@ import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -66,11 +67,23 @@ public class JollyBoxesMod
         if (event.getPlayer().getEntityWorld().isRemote()) {
             for (int i = 0; i < event.getPlayer().getEntityWorld().getRandom().nextInt(5); i++) {
                 BlockPos pos2 = new BlockPos((pos.getX() + (event.getPlayer().getEntityWorld().getRandom().nextDouble() * 32) - 16), pos.getY() + 100, (double) (pos.getZ() + (event.getPlayer().getEntityWorld().getRandom().nextDouble() * 32) - 16));
-                FallingBlockEntity fallingblockentity = new FallingBlockEntity(event.getPlayer().getEntityWorld(), pos2.getX(), pos2.getY(), pos2.getZ(), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
-                event.getPlayer().getEntityWorld().addEntity(fallingblockentity);
+                if (getGroundPos(pos2, event.getPlayer().getEntityWorld()) != null) {
+                    event.getPlayer().getEntityWorld().setBlockState(getGroundPos(pos2, event.getPlayer().getEntityWorld()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
+                }
             }
-
         }
+    }
+    public BlockPos getGroundPos(BlockPos pos, World world) {
+        for (int i = pos.getY(); i > 0; i--) {
+            if (isValidPos(pos.down(pos.getY() - i), world) && world.getBlockState(pos).equals(Blocks.AIR.getDefaultState())) {
+                return pos.down(pos.getY() - i);
+            }
+        }
+        return null;
+    }
+
+    public boolean isValidPos(BlockPos pos, World world) {
+        return (world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) && world.getBlockState(pos.down()).isSolid());
     }
 
 
