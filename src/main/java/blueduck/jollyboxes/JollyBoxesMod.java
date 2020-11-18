@@ -1,5 +1,7 @@
 package blueduck.jollyboxes;
 
+import blueduck.jollyboxes.config.ConfigHelper;
+import blueduck.jollyboxes.config.JollyBoxesConfig;
 import blueduck.jollyboxes.registry.JollyBoxesBlocks;
 import blueduck.jollyboxes.registry.JollyBoxesSounds;
 import blueduck.jollyboxes.util.JollyBoxesLootModifier;
@@ -24,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -43,9 +46,14 @@ public class JollyBoxesMod
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
+    public static JollyBoxesConfig CONFIG;
+
     public static String MODID = "jolly_boxes";
 
     public JollyBoxesMod() {
+
+        CONFIG = ConfigHelper.register(ModConfig.Type.COMMON, JollyBoxesConfig::new);
+
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -75,17 +83,17 @@ public class JollyBoxesMod
 
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.player.getPersistentData().getBoolean("slept") && event.player.getEntityWorld().isDaytime()) {
+            event.player.getPersistentData().putBoolean("slept", false);
             BlockPos pos = event.player.getPosition();
-            if (event.player.getEntityWorld().isRemote()) {
-                for (int i = 0; i < event.player.getEntityWorld().getRandom().nextInt(5) + 1; i++) {
+            if (!event.player.getEntityWorld().isRemote() && event.player.getEntityWorld().getRandom().nextDouble() < CONFIG.PRESENT_CHANCE.get()) {
+                for (int i = 0; i < event.player.getEntityWorld().getRandom().nextInt(CONFIG.MAXIMUM_PRESENTS.get() + CONFIG.MINIMUM_PRESENTS.get()) + CONFIG.MINIMUM_PRESENTS.get(); i++) {
                     BlockPos pos2 = new BlockPos((pos.getX() + (event.player.getEntityWorld().getRandom().nextDouble() * 32) - 16), pos.getY() + 100, (double) (pos.getZ() + (event.player.getEntityWorld().getRandom().nextDouble() * 32) - 16));
                     if (getGroundPos(pos2, event.player.getEntityWorld()) != null) {
                         event.player.getEntityWorld().setBlockState(getGroundPos(pos2, event.player.getEntityWorld()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
                     }
                 }
+                event.player.playSound(JollyBoxesSounds.SLEIGH_BELLS.get(), SoundCategory.AMBIENT, 1F, 1F);
             }
-            event.player.getPersistentData().putBoolean("slept", false);
-            event.player.playSound(JollyBoxesSounds.SLEIGH_BELLS.get(), SoundCategory.AMBIENT, 1F, 1F);
         }
     }
 
