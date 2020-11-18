@@ -1,0 +1,12 @@
+{
+  "ambient.bells": {
+    "category": "ambient",
+    "subtitle": "jolly_boxes.subtitle.bells",
+    "sounds": [
+      {
+        "name": "jolly_boxes:ambient/sleigh_bells",
+        "stream": true
+      }
+    ]
+  }
+  }

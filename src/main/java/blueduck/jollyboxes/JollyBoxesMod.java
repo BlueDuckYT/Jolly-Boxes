@@ -1,6 +1,7 @@
 package blueduck.jollyboxes;
 
 import blueduck.jollyboxes.registry.JollyBoxesBlocks;
+import blueduck.jollyboxes.registry.JollyBoxesSounds;
 import blueduck.jollyboxes.util.JollyBoxesLootModifier;
 import blueduck.jollyboxes.util.LootUtil;
 import net.minecraft.block.Block;
@@ -12,11 +13,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -54,7 +57,10 @@ public class JollyBoxesMod
 
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerWakeUp);
 
+        MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
+
         JollyBoxesBlocks.init();
+        JollyBoxesSounds.init();
         //JollyBoxesLootModifier.init();
         //addBoxTables();
 
@@ -63,19 +69,29 @@ public class JollyBoxesMod
     }
 
     public void onPlayerWakeUp(final PlayerWakeUpEvent event) {
-        BlockPos pos = event.getPlayer().getPosition();
-        if (event.getPlayer().getEntityWorld().isRemote()) {
-            for (int i = 0; i < event.getPlayer().getEntityWorld().getRandom().nextInt(5); i++) {
-                BlockPos pos2 = new BlockPos((pos.getX() + (event.getPlayer().getEntityWorld().getRandom().nextDouble() * 32) - 16), pos.getY() + 100, (double) (pos.getZ() + (event.getPlayer().getEntityWorld().getRandom().nextDouble() * 32) - 16));
-                if (getGroundPos(pos2, event.getPlayer().getEntityWorld()) != null) {
-                    event.getPlayer().getEntityWorld().setBlockState(getGroundPos(pos2, event.getPlayer().getEntityWorld()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
+
+        event.getPlayer().getPersistentData().putBoolean("slept", true);
+    }
+
+    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.player.getPersistentData().getBoolean("slept") && event.player.getEntityWorld().isDaytime()) {
+            BlockPos pos = event.player.getPosition();
+            if (event.player.getEntityWorld().isRemote()) {
+                for (int i = 0; i < event.player.getEntityWorld().getRandom().nextInt(5) + 1; i++) {
+                    BlockPos pos2 = new BlockPos((pos.getX() + (event.player.getEntityWorld().getRandom().nextDouble() * 32) - 16), pos.getY() + 100, (double) (pos.getZ() + (event.player.getEntityWorld().getRandom().nextDouble() * 32) - 16));
+                    if (getGroundPos(pos2, event.player.getEntityWorld()) != null) {
+                        event.player.getEntityWorld().setBlockState(getGroundPos(pos2, event.player.getEntityWorld()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
+                    }
                 }
             }
+            event.player.getPersistentData().putBoolean("slept", false);
+            event.player.playSound(JollyBoxesSounds.SLEIGH_BELLS.get(), SoundCategory.AMBIENT, 1F, 1F);
         }
     }
+
     public BlockPos getGroundPos(BlockPos pos, World world) {
         for (int i = pos.getY(); i > 0; i--) {
-            if (isValidPos(pos.down(pos.getY() - i), world) && world.getBlockState(pos).equals(Blocks.AIR.getDefaultState())) {
+            if (isValidPos(pos.down(pos.getY() - i), world) && (world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) || world.getBlockState(pos).equals(Blocks.SNOW.getDefaultState()))) {
                 return pos.down(pos.getY() - i);
             }
         }
@@ -83,7 +99,7 @@ public class JollyBoxesMod
     }
 
     public boolean isValidPos(BlockPos pos, World world) {
-        return (world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) && world.getBlockState(pos.down()).isSolid());
+        return ((world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) || world.getBlockState(pos).equals(Blocks.SNOW.getDefaultState())) && world.getBlockState(pos.down()).isSolid());
     }
 
 

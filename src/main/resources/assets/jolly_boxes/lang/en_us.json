@@ -1,5 +1,7 @@
 {
   "block.jolly_boxes.small_box": "Small Jolly Box",
   "block.jolly_boxes.medium_box": "Medium Jolly Box",
-  "block.jolly_boxes.large_box": "Large Jolly Box"
+  "block.jolly_boxes.large_box": "Large Jolly Box",
+
+  "jolly_boxes.subtitle.bells": "Sleigh Bells"
 }
