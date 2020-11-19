@@ -37,6 +37,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -77,8 +79,9 @@ public class JollyBoxesMod
     }
 
     public void onPlayerWakeUp(final PlayerWakeUpEvent event) {
-
-        event.getPlayer().getPersistentData().putBoolean("slept", true);
+        if ((CONFIG.ONLY_IN_SNOWY_BIOMES.get() || CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getPlayer().getEntityWorld().getBiome(event.getPlayer().getPosition()).getTemperature() <= 0.15) && (CONFIG.ONLY_IN_DECEMBER.get() || CONFIG.ONLY_IN_DECEMBER.get() && isDecember())) {
+            event.getPlayer().getPersistentData().putBoolean("slept", true);
+        }
     }
 
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -108,6 +111,12 @@ public class JollyBoxesMod
 
     public boolean isValidPos(BlockPos pos, World world) {
         return ((world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) || world.getBlockState(pos).equals(Blocks.SNOW.getDefaultState())) && world.getBlockState(pos.down()).isSolid());
+    }
+
+    private static boolean isDecember() {
+        LocalDate localDate = LocalDate.now();
+        int month = localDate.get(ChronoField.MONTH_OF_YEAR);
+        return month == 12;
     }
 
 
