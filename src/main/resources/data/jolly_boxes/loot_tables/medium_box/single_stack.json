@@ -12,7 +12,7 @@
           "type": "minecraft:tag",
           "weight": 3,
           "quality": 0,
-          "name": "jolly_boxes:medium_present_single_stack",
+          "name": "forge:jolly_boxes/medium_present_single_stack",
           "expand": true
         }
       ]

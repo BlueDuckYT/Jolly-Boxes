@@ -25,10 +25,10 @@ public class JollyBoxesConfig {
                 .defineInRange("present_maximum", 5, 0, 32));
         this.ONLY_IN_SNOWY_BIOMES= subscriber.subscribe(builder
                 .comment("Should Presents only spawn in snowy biomes?")
-                .define("only_in_snowy_biomes", true, o -> o instanceof Boolean));
+                .define("only_in_snowy_biomes", false, o -> o instanceof Boolean));
         this.ONLY_IN_DECEMBER= subscriber.subscribe(builder
                 .comment("Should Presents only spawn December?")
-                .define("only_in_december", true, o -> o instanceof Boolean));
+                .define("only_in_december", false, o -> o instanceof Boolean));
         builder.pop();
     }
 

@@ -54,6 +54,16 @@
           "type": "minecraft:loot_table",
           "weight": 5,
           "quality": 0,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1.0,
+                "max": 8.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
           "name": "jolly_boxes:small_box/common"
         }
       ]
