@@ -79,7 +79,7 @@ public class JollyBoxesMod
     }
 
     public void onPlayerWakeUp(final PlayerWakeUpEvent event) {
-        if ((CONFIG.ONLY_IN_SNOWY_BIOMES.get() || CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getPlayer().getEntityWorld().getBiome(event.getPlayer().getPosition()).getTemperature() <= 0.15) && (CONFIG.ONLY_IN_DECEMBER.get() || CONFIG.ONLY_IN_DECEMBER.get() && isDecember())) {
+        if ((!CONFIG.ONLY_IN_SNOWY_BIOMES.get() || (CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getPlayer().getEntityWorld().getBiome(event.getPlayer().getPosition()).getTemperature() <= 0.15) && (!CONFIG.ONLY_IN_DECEMBER.get() || (CONFIG.ONLY_IN_DECEMBER.get() && isDecember())))) {
             event.getPlayer().getPersistentData().putBoolean("slept", true);
         }
     }
