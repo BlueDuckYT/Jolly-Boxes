@@ -31,7 +31,10 @@
       "required": false
     },
 
-
+    {
+      "id": "quark:iron_rod",
+      "required": false
+    },
 
 
     {

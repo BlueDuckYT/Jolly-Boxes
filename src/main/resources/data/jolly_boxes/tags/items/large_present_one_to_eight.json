@@ -46,6 +46,11 @@
     {
       "id": "more_jellyfish:honey_jellyfish",
       "required": false
+    },
+
+    {
+      "id": "quark:rainbow_rune",
+      "required": false
     }
   ]
 }

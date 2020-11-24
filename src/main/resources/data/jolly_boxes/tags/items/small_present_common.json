@@ -10,6 +10,21 @@
     {
       "id": "jellyfishing:coralstone",
       "required": false
+    },
+
+    {
+      "id": "more_jellyfish:deep_coralstone",
+      "required": false
+    },
+
+    {
+      "id": "pumpkin_spice_everything:pumpkin_spice",
+      "required": false
+    },
+
+    {
+      "id": "festive_creepers:firework_powder",
+      "required": false
     }
   ]
 }

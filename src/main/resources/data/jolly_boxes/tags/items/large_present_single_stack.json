@@ -23,6 +23,14 @@
       "required": false
     },
 
+    {
+      "id": "quark:rainbow_rune",
+      "required": false
+    },
+    {
+      "id": "quark:monster_box",
+      "required": false
+    },
 
     {
       "id": "artifacts:running_shoes",

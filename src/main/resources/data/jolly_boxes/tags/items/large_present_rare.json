@@ -19,7 +19,10 @@
       "required": false
     },
 
-
+    {
+      "id": "quark:diamond_heart",
+      "required": false
+    },
 
     {
       "id": "artifacts:eternal_steak",
