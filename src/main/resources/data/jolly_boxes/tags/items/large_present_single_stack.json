@@ -1,0 +1,44 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:trident",
+    "minecraft:diamond_sword",
+    "minecraft:diamond_pickaxe",
+    "minecraft:diamond_axe",
+    "minecraft:diamond_shovel",
+    "minecraft:diamond_hoe",
+    "minecraft:ancient_debris",
+    "minecraft:totem_of_undying",
+
+    {
+      "id": "jellyfishing:spatula",
+      "required": false
+    },
+    {
+      "id": "more_jellyfish:diamond_jellyfish",
+      "required": false
+    },
+    {
+      "id": "more_jellyfish:emerald_jellyfish",
+      "required": false
+    },
+
+
+    {
+      "id": "artifacts:running_shoes",
+      "required": false
+    },
+    {
+      "id": "artifacts:flippers",
+      "required": false
+    },
+    {
+      "id": "artifacts:snorkel",
+      "required": false
+    },
+    {
+      "id": "artifacts:night_vision_goggles",
+      "required": false
+    }
+  ]
+}

@@ -11,7 +11,7 @@
         {
           "type": "minecraft:tag",
           "weight": 3,
-          "name": "forge:jolly_boxes/small_present_common",
+          "name": "jolly_boxes:small_present_common",
           "expand": true
         }
       ]

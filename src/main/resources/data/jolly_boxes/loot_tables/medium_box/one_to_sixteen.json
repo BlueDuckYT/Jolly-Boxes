@@ -11,7 +11,7 @@
         {
           "type": "minecraft:tag",
           "weight": 3,
-          "name": "forge:jolly_boxes/medium_present_one_to_sixteen",
+          "name": "jolly_boxes:medium_present_one_to_sixteen",
           "expand": true
         }
       ]

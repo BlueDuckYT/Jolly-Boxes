@@ -27,7 +27,7 @@ public class JollyBoxesConfig {
                 .comment("Should Presents only spawn in snowy biomes?")
                 .define("only_in_snowy_biomes", false, o -> o instanceof Boolean));
         this.ONLY_IN_DECEMBER= subscriber.subscribe(builder
-                .comment("Should Presents only spawn December?")
+                .comment("Should Presents only spawn during December?")
                 .define("only_in_december", false, o -> o instanceof Boolean));
         builder.pop();
     }

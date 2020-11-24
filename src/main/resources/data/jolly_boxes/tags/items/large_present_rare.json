@@ -1,0 +1,49 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:elytra",
+    "minecraft:shulker_box",
+    "minecraft:nether_star",
+    "minecraft:enchanted_golden_apple",
+
+    {
+      "id": "jellyfishing:golden_spatula",
+      "required": false
+    },
+    {
+      "id": "jellyfishing:grease_ball",
+      "required": false
+    },
+    {
+      "id": "more_jellyfish:netherite_jellyfish",
+      "required": false
+    },
+
+
+
+    {
+      "id": "artifacts:eternal_steak",
+      "required": false
+    },
+    {
+      "id": "artifacts:cloud_in_a_bottle",
+      "required": false
+    },
+    {
+      "id": "artifacts:villager_hat",
+      "required": false
+    },
+    {
+      "id": "artifacts:umbrella",
+      "required": false
+    },
+    {
+      "id": "artifacts:digging_claws",
+      "required": false
+    },
+    {
+      "id": "artifacts:universal_attractor",
+      "required": false
+    }
+  ]
+}
