@@ -47,6 +47,16 @@
     {
       "id": "artifacts:night_vision_goggles",
       "required": false
+    },
+
+    {
+      "id": "undergarden:catalyst",
+      "required": false
+    },
+
+    {
+      "id": "quark:rainbow_rune",
+      "required": false
     }
   ]
 }

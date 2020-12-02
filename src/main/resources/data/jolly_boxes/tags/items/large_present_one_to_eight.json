@@ -48,8 +48,9 @@
       "required": false
     },
 
+
     {
-      "id": "quark:rainbow_rune",
+      "id": "aquaculture:neptunium_ingot",
       "required": false
     }
   ]
