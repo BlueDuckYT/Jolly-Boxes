@@ -5,6 +5,7 @@
     "minecraft:shulker_box",
     "minecraft:nether_star",
     "minecraft:enchanted_golden_apple",
+    "minecraft:conduit",
 
     {
       "id": "jellyfishing:golden_spatula",
@@ -14,10 +15,12 @@
       "id": "jellyfishing:grease_ball",
       "required": false
     },
+
     {
       "id": "more_jellyfish:netherite_jellyfish",
       "required": false
     },
+
 
     {
       "id": "quark:diamond_heart",

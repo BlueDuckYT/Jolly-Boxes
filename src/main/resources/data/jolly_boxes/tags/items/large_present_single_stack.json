@@ -15,6 +15,23 @@
       "required": false
     },
     {
+      "id": "jellyfishing:air_suit_helmet",
+      "required": false
+    },
+    {
+      "id": "jellyfishing:air_suit_chestplate",
+      "required": false
+    },
+    {
+      "id": "jellyfishing:air_suit_leggings",
+      "required": false
+    },
+    {
+      "id": "jellyfishing:air_suit_boots",
+      "required": false
+    },
+
+    {
       "id": "more_jellyfish:diamond_jellyfish",
       "required": false
     },
@@ -56,6 +73,16 @@
 
     {
       "id": "quark:rainbow_rune",
+      "required": false
+    },
+
+    {
+      "id": "next_christmas:sledge",
+      "required": false
+    },
+
+    {
+      "id": "omni:enchanted_golden_carrot",
       "required": false
     }
   ]
