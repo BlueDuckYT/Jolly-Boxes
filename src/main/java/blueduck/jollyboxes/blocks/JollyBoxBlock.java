@@ -1,23 +1,27 @@
 package blueduck.jollyboxes.blocks;
 
 import blueduck.jollyboxes.registry.JollyBoxesBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FallingBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.BarrelTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -30,9 +34,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
-public class JollyBoxBlock extends FallingBlock {
+public class JollyBoxBlock extends FallingBlock implements IWaterLoggable {
+
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public static final VoxelShape SMALL = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 10.0D, 14.0D);
     public static final VoxelShape MEDIUM = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 10.0D, 15.0D);
@@ -40,6 +47,7 @@ public class JollyBoxBlock extends FallingBlock {
 
     public JollyBoxBlock(Properties properties) {
         super(properties);
+        this.setDefaultState(this.getDefaultState().with(WATERLOGGED, Boolean.valueOf(false)));
     }
 
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
@@ -74,6 +82,24 @@ public class JollyBoxBlock extends FallingBlock {
             return MEDIUM;
         }
         return LARGE;
+    }
+
+    public void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(WATERLOGGED);
+    }
+
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockPos blockpos = context.getPos();
+        BlockState blockstate = context.getWorld().getBlockState(blockpos);
+        if (blockstate.isIn(this)) {
+            return blockstate.with(WATERLOGGED, Boolean.valueOf(false));
+        } else {
+            FluidState fluidstate = context.getWorld().getFluidState(blockpos);
+            BlockState blockstate1 = this.getDefaultState().with(WATERLOGGED, Boolean.valueOf(fluidstate.getFluid() == Fluids.WATER));
+            Direction direction = context.getFace();
+            return blockstate1;
+        }
     }
 
 
