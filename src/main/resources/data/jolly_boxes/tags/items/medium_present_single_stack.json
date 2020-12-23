@@ -9,6 +9,10 @@
       "id": "jellyfishing:jellyfish_net",
       "required": false
     },
+    {
+      "id": "jellyfishing:karate_glove",
+      "required": false
+    },
 
     {
       "id": "more_jellyfish:coal_jellyfish",

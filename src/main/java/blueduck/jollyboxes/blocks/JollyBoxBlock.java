@@ -56,7 +56,8 @@ public class JollyBoxBlock extends FallingBlock implements IWaterLoggable {
         if (worldIn.isRemote) {
             return ActionResultType.SUCCESS;
         }
-        worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+        BlockState replaceState = state.get(WATERLOGGED) ? Blocks.AIR.getDefaultState() : Blocks.WATER.getDefaultState();
+        worldIn.setBlockState(pos, replaceState);
         if (worldIn instanceof ServerWorld) {
             ServerWorld worldServer = (ServerWorld) worldIn;
             ItemStack loot = new ItemStack(ForgeRegistries.ITEMS.getValue(this.getRegistryName()));

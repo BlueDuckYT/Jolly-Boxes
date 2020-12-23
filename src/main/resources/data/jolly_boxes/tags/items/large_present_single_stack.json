@@ -30,6 +30,10 @@
       "id": "jellyfishing:air_suit_boots",
       "required": false
     },
+    {
+      "id": "jellyfishing:master_karate_glove",
+      "required": false
+    },
 
     {
       "id": "more_jellyfish:diamond_jellyfish",
