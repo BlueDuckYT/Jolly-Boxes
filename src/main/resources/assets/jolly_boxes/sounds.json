@@ -8,5 +8,15 @@
         "stream": true
       }
     ]
+  },
+  "ambient.horn": {
+    "category": "ambient",
+    "subtitle": "jolly_boxes.subtitle.horn",
+    "sounds": [
+      {
+        "name": "jolly_boxes:ambient/party_horn",
+        "stream": true
+      }
+    ]
   }
   }

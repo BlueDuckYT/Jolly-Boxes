@@ -11,6 +11,10 @@ public class JollyBoxesConfig {
     public ConfigHelper.ConfigValueListener<Boolean> ONLY_IN_SNOWY_BIOMES;
     public ConfigHelper.ConfigValueListener<Boolean> ONLY_IN_DECEMBER;
 
+    public ConfigHelper.ConfigValueListener<Boolean> PARTY_HORN_TOGGLE;
+    public ConfigHelper.ConfigValueListener<Boolean> PARTY_HORN_DECEMBER_ONLY;
+
+
 
     public JollyBoxesConfig(ForgeConfigSpec.Builder builder, ConfigHelper.Subscriber subscriber) {
         builder.push("General");
@@ -29,6 +33,13 @@ public class JollyBoxesConfig {
         this.ONLY_IN_DECEMBER= subscriber.subscribe(builder
                 .comment("Should Presents only spawn during December?")
                 .define("only_in_december", false, o -> o instanceof Boolean));
+        this.PARTY_HORN_TOGGLE= subscriber.subscribe(builder
+                .comment("Replace the Sleigh Bell sound with a Party Horn sound?")
+                .define("party_horn_replace_bells", false, o -> o instanceof Boolean));
+        this.PARTY_HORN_DECEMBER_ONLY= subscriber.subscribe(builder
+                .comment("Replace the Sleigh Bell sound with a Party Horn sound (December excluded)?")
+                .define("party_horn_december", false, o -> o instanceof Boolean));
+
         builder.pop();
     }
 

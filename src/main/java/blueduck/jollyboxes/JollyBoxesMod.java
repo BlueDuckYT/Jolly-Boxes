@@ -16,6 +16,7 @@ import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -25,6 +26,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -95,8 +97,25 @@ public class JollyBoxesMod
                         event.player.getEntityWorld().setBlockState(getGroundPos(pos2, event.player.getEntityWorld()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
                     }
                 }
-                event.player.playSound(JollyBoxesSounds.SLEIGH_BELLS.get(), SoundCategory.AMBIENT, 1F, 1F);
+                event.player.playSound(getSound().get(), SoundCategory.AMBIENT, 1F, 1F);
             }
+        }
+    }
+
+    public static RegistryObject<SoundEvent> getSound() {
+        if (CONFIG.PARTY_HORN_TOGGLE.get()) {
+            return JollyBoxesSounds.PARTY_HORN;
+        }
+        else if (CONFIG.PARTY_HORN_DECEMBER_ONLY.get()) {
+            if (isDecember()) {
+                return JollyBoxesSounds.SLEIGH_BELLS;
+            }
+            else {
+                return JollyBoxesSounds.PARTY_HORN;
+            }
+        }
+        else {
+            return JollyBoxesSounds.SLEIGH_BELLS;
         }
     }
 
@@ -113,7 +132,7 @@ public class JollyBoxesMod
         return ((world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) || world.getBlockState(pos).equals(Blocks.SNOW.getDefaultState())) && world.getBlockState(pos.down()).isSolid());
     }
 
-    private static boolean isDecember() {
+    public static boolean isDecember() {
         LocalDate localDate = LocalDate.now();
         int month = localDate.get(ChronoField.MONTH_OF_YEAR);
         return month == 12;
