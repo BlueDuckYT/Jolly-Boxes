@@ -1,10 +1,12 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout_mipped",
 	"textures": {
 		"0": "jolly_boxes:block/largepresentsides",
 		"1": "jolly_boxes:block/largepresenttop",
 		"particle": "jolly_boxes:block/largepresenttop"
 	},
+	"render_type": "cutout_mipped",
 	"elements": [
 		{
 			"from": [1, 0, 1],

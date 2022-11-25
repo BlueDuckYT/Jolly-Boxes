@@ -4,38 +4,25 @@ import blueduck.jollyboxes.config.ConfigHelper;
 import blueduck.jollyboxes.config.JollyBoxesConfig;
 import blueduck.jollyboxes.registry.JollyBoxesBlocks;
 import blueduck.jollyboxes.registry.JollyBoxesSounds;
-import blueduck.jollyboxes.util.JollyBoxesLootModifier;
-import blueduck.jollyboxes.util.LootUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FallingBlock;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.FallingBlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.Level;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,23 +68,23 @@ public class JollyBoxesMod
     }
 
     public void onPlayerWakeUp(final PlayerWakeUpEvent event) {
-        if ((!CONFIG.ONLY_IN_SNOWY_BIOMES.get() || (CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getPlayer().getEntityWorld().getBiome(event.getPlayer().getPosition()).getTemperature() <= 0.15) && (!CONFIG.ONLY_IN_DECEMBER.get() || (CONFIG.ONLY_IN_DECEMBER.get() && isDecember())))) {
+        if ((!CONFIG.ONLY_IN_SNOWY_BIOMES.get() || (CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getPlayer().getLevel().getBiome(event.getPlayer().getOnPos()).value().getBaseTemperature() <= 0.15) && (!CONFIG.ONLY_IN_DECEMBER.get() || (CONFIG.ONLY_IN_DECEMBER.get() && isDecember())))) {
             event.getPlayer().getPersistentData().putBoolean("slept", true);
         }
     }
 
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.player.getPersistentData().getBoolean("slept") && event.player.getEntityWorld().isDaytime()) {
+        if (event.player.getPersistentData().getBoolean("slept") && event.player.getLevel().isDay()) {
             event.player.getPersistentData().putBoolean("slept", false);
-            BlockPos pos = event.player.getPosition();
-            if (!event.player.getEntityWorld().isRemote() && event.player.getEntityWorld().getRandom().nextDouble() < CONFIG.PRESENT_CHANCE.get()) {
-                for (int i = 0; i < event.player.getEntityWorld().getRandom().nextInt(CONFIG.MAXIMUM_PRESENTS.get() + CONFIG.MINIMUM_PRESENTS.get()) + CONFIG.MINIMUM_PRESENTS.get(); i++) {
-                    BlockPos pos2 = new BlockPos((pos.getX() + (event.player.getEntityWorld().getRandom().nextDouble() * 32) - 16), pos.getY() + 100, (double) (pos.getZ() + (event.player.getEntityWorld().getRandom().nextDouble() * 32) - 16));
-                    if (getGroundPos(pos2, event.player.getEntityWorld()) != null) {
-                        event.player.getEntityWorld().setBlockState(getGroundPos(pos2, event.player.getEntityWorld()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().getDefaultState());
+            BlockPos pos = event.player.getOnPos();
+            if (!event.player.getLevel().isClientSide() && event.player.getLevel().getRandom().nextDouble() < CONFIG.PRESENT_CHANCE.get()) {
+                for (int i = 0; i < event.player.getLevel().getRandom().nextInt(CONFIG.MAXIMUM_PRESENTS.get() + CONFIG.MINIMUM_PRESENTS.get()) + CONFIG.MINIMUM_PRESENTS.get(); i++) {
+                    BlockPos pos2 = new BlockPos((pos.getX() + (event.player.getLevel().getRandom().nextDouble() * 32) - 16), pos.getY() + 100, (double) (pos.getZ() + (event.player.getLevel().getRandom().nextDouble() * 32) - 16));
+                    if (getGroundPos(pos2, event.player.getLevel()) != null) {
+                        event.player.getLevel().setBlock(getGroundPos(pos2, event.player.getLevel()), JollyBoxesBlocks.SMALL_JOLLY_BOX.get().defaultBlockState(), 3);
                     }
                 }
-                event.player.playSound(getSound().get(), SoundCategory.AMBIENT, 1F, 1F);
+                event.player.playNotifySound(getSound().get(), SoundSource.AMBIENT, 1F, 1F);
             }
         }
     }
@@ -119,17 +106,17 @@ public class JollyBoxesMod
         }
     }
 
-    public BlockPos getGroundPos(BlockPos pos, World world) {
+    public BlockPos getGroundPos(BlockPos pos, Level world) {
         for (int i = pos.getY(); i > 0; i--) {
-            if (isValidPos(pos.down(pos.getY() - i), world) && (world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) || world.getBlockState(pos).equals(Blocks.SNOW.getDefaultState()))) {
-                return pos.down(pos.getY() - i);
+            if (isValidPos(pos.below(pos.getY() - i), world) && (world.getBlockState(pos).equals(Blocks.AIR.defaultBlockState()) || world.getBlockState(pos).equals(Blocks.SNOW.defaultBlockState()))) {
+                return pos.below(pos.getY() - i);
             }
         }
         return null;
     }
 
-    public boolean isValidPos(BlockPos pos, World world) {
-        return ((world.getBlockState(pos).equals(Blocks.AIR.getDefaultState()) || world.getBlockState(pos).equals(Blocks.SNOW.getDefaultState())) && world.getBlockState(pos.down()).isSolid());
+    public boolean isValidPos(BlockPos pos, Level world) {
+        return ((world.getBlockState(pos).equals(Blocks.AIR.defaultBlockState()) || world.getBlockState(pos).equals(Blocks.SNOW.defaultBlockState())) && world.getBlockState(pos.below()).canOcclude());
     }
 
     public static boolean isDecember() {
@@ -149,43 +136,20 @@ public class JollyBoxesMod
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
 
-        RenderTypeLookup.setRenderLayer(JollyBoxesBlocks.SMALL_JOLLY_BOX.get(), RenderType.getCutoutMipped());
-        RenderTypeLookup.setRenderLayer(JollyBoxesBlocks.MEDIUM_JOLLY_BOX.get(), RenderType.getCutoutMipped());
-        RenderTypeLookup.setRenderLayer(JollyBoxesBlocks.LARGE_JOLLY_BOX.get(), RenderType.getCutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(JollyBoxesBlocks.SMALL_JOLLY_BOX.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(JollyBoxesBlocks.MEDIUM_JOLLY_BOX.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(JollyBoxesBlocks.LARGE_JOLLY_BOX.get(), RenderType.cutoutMipped());
 
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
-    }
 
-    private void processIMC(final InterModProcessEvent event)
-    {
-        // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
-                collect(Collectors.toList()));
-    }
+
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-        // do something when the server starts
-        LOGGER.info("HELLO from server starting");
-    }
+
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-        }
 
-    }
 
 }

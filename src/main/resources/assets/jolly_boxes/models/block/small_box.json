@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"render_type": "cutout_mipped",
 	"textures": {
 		"4": "jolly_boxes:block/smallpresentsides",
 		"5": "jolly_boxes:block/smallpresenttop",
