@@ -45,15 +45,6 @@ public class JollyBoxesMod
 
         CONFIG = ConfigHelper.register(ModConfig.Type.COMMON, JollyBoxesConfig::new);
 
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the enqueueIMC method for modloading
-        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // Register the doClientStuff method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerWakeUp);
 
         MinecraftForge.EVENT_BUS.addListener(this::onPlayerTick);
@@ -68,8 +59,8 @@ public class JollyBoxesMod
     }
 
     public void onPlayerWakeUp(final PlayerWakeUpEvent event) {
-        if ((!CONFIG.ONLY_IN_SNOWY_BIOMES.get() || (CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getPlayer().getLevel().getBiome(event.getPlayer().getOnPos()).value().getBaseTemperature() <= 0.15) && (!CONFIG.ONLY_IN_DECEMBER.get() || (CONFIG.ONLY_IN_DECEMBER.get() && isDecember())))) {
-            event.getPlayer().getPersistentData().putBoolean("slept", true);
+        if ((!CONFIG.ONLY_IN_SNOWY_BIOMES.get() || (CONFIG.ONLY_IN_SNOWY_BIOMES.get() && event.getEntity().getLevel().getBiome(event.getEntity().getOnPos()).value().getBaseTemperature() <= 0.15) && (!CONFIG.ONLY_IN_DECEMBER.get() || (CONFIG.ONLY_IN_DECEMBER.get() && isDecember())))) {
+            event.getEntity().getPersistentData().putBoolean("slept", true);
         }
     }
 
@@ -126,21 +117,9 @@ public class JollyBoxesMod
     }
 
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
-        // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-    }
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
 
-        ItemBlockRenderTypes.setRenderLayer(JollyBoxesBlocks.SMALL_JOLLY_BOX.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(JollyBoxesBlocks.MEDIUM_JOLLY_BOX.get(), RenderType.cutoutMipped());
-        ItemBlockRenderTypes.setRenderLayer(JollyBoxesBlocks.LARGE_JOLLY_BOX.get(), RenderType.cutoutMipped());
 
-    }
 
 
 

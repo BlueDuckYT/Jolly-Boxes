@@ -75,10 +75,6 @@
       "required": false
     },
 
-    {
-      "id": "quark:rainbow_rune",
-      "required": false
-    },
 
     {
       "id": "next_christmas:sledge",

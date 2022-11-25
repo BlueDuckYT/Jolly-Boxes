@@ -4,6 +4,11 @@
     "minecraft:gold_ingot",
     "minecraft:ender_pearl",
     "minecraft:iron_ingot",
+    "minecraft:copper_ingot",
+    "minecraft:glow_berries",
+
+    "minecraft:raw_iron",
+    "minecraft:raw_gold",
 
     {
       "id": "jellyfishing:jellyfish_jelly",

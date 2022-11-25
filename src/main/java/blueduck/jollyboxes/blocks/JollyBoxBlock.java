@@ -54,7 +54,7 @@ public class JollyBoxBlock extends FallingBlock implements LiquidBlockContainer 
         worldIn.setBlock(pos, replaceState, 0);
         if (worldIn instanceof ServerLevel) {
             ServerLevel worldServer = (ServerLevel) worldIn;
-            ItemStack loot = new ItemStack(ForgeRegistries.ITEMS.getValue(this.getRegistryName()));
+            ItemStack loot = new ItemStack(state.getBlock().asItem());
             if (!loot.isEmpty()) {
                 this.giveItem(player, loot);
                 return InteractionResult.SUCCESS;

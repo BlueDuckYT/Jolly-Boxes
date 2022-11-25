@@ -3,6 +3,8 @@
   "values": [
     "minecraft:redstone",
     "minecraft:lapis_lazuli",
-    "minecraft:coal"
+    "minecraft:coal",
+    "minecraft:raw_copper",
+    "minecraft:amethyst_shard"
   ]
 }
